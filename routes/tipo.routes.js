@@ -1,0 +1,52 @@
+/*****************************************************************************************
+ * Objetivo: controla a rota de tipo
+ * Data:     10/06/2026
+ * Autor:    
+ * Versão:   1.0
+ *****************************************************************************************/
+
+
+// importe do express
+const controllerTipo = require("../controller/tipo/controler_tipo.js")
+
+const express = require("express")
+
+// cria objeto de rota para o arquivo
+const router = express.Router()
+
+// Importa o body-parser 
+const bodyParser = require("body-parser")
+// Cria a função que processa o JSON 
+const bodyParserJSON = bodyParser.json()
+
+//////////////////////////////////////////////////////////////////////////
+// TIPO
+//////////////////////////////////////////////////////////////////////////
+
+
+// Buscar tipo
+router.get("/:id", async function(request, response){
+
+    let id = request.params.id
+
+    let result = await controllerTipo.buscarTipo(id)
+
+    response.status(result.status_code)
+    response.json(result)
+
+})
+
+// Listar tipos
+router.get("/", async function(request, response){
+
+    let result = await controllerTipo.listarTipo()
+
+    response.status(result.status_code)
+    response.json(result)
+
+})
+
+
+
+// exporte pro app ter acesso as rotas do tipo
+module.exports = router
