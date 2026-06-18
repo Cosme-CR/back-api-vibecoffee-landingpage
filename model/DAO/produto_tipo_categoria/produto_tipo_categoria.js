@@ -74,16 +74,34 @@ const selectByIdProdutoTipoCategoria = async function(id){
 }
 
 //Função para retornar os tipos categoria filtrando pelo ID do produto
-const selectTipoCategoriaByIdProduto = async function(idProduto){
+async function selectTipoCategoriaByIdProduto(idProduto){
     try {
-        let sql = `select  tbl_tipo_categoria.id,
-                           tbl_tipo_categoria.id_tipo,
-                           tbl_tipo_categoria.id_categoria,
-                           tbl_produto_tipo_categoria.preco
-                    from tbl_produto_tipo_categoria
-                        inner join tbl_tipo_categoria
-                            on tbl_tipo_categoria.id = tbl_produto_tipo_categoria.id_tbl_tipo_categoria
-                    where tbl_produto_tipo_categoria.id_tbl_produto = ${idProduto}`
+
+        let sql = `
+            SELECT
+                tbl_tipo_categoria.id,
+                tbl_tipo_categoria.id_tipo,
+                tbl_tipo.tipo,
+                tbl_tipo_categoria.id_categoria,
+                tbl_categoria.categoria,
+                tbl_produto_tipo_categoria.preco
+
+            FROM tbl_produto_tipo_categoria
+
+            INNER JOIN tbl_tipo_categoria
+                ON tbl_tipo_categoria.id =
+                tbl_produto_tipo_categoria.id_tbl_tipo_categoria
+
+            INNER JOIN tbl_tipo
+                ON tbl_tipo.id =
+                tbl_tipo_categoria.id_tipo
+
+            INNER JOIN tbl_categoria
+                ON tbl_categoria.id =
+                tbl_tipo_categoria.id_categoria
+
+            WHERE tbl_produto_tipo_categoria.id_tbl_produto = ${idProduto}
+        `
 
         let result = await knexConex.raw(sql)
 
@@ -92,6 +110,7 @@ const selectTipoCategoriaByIdProduto = async function(idProduto){
         }else{
             return false
         }
+
     } catch (error) {
         console.log(error)
         return false
